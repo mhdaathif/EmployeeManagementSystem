@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     Optional<Attendance> findByDate(LocalDate now);
     List<Attendance> findAllByEmployeeId(Long id);
+    List<Attendance> findAlByDate(LocalDate date);
+    Attendance findByEmployeeIdAndDate(Long userId, LocalDate date);
 }

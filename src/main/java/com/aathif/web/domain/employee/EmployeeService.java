@@ -1,6 +1,5 @@
-package com.aathif.web.domain.admin;
+package com.aathif.web.domain.employee;
 
-import com.aathif.web.domain.employee.EmployeeDTO;
 import com.aathif.web.domain.security.model.User;
 import com.aathif.web.domain.security.model.UserRole;
 import com.aathif.web.domain.security.repos.UserRepository;
@@ -19,8 +18,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class AdminService {
+public class EmployeeService {
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -29,7 +29,7 @@ public class AdminService {
     public ApplicationResponseDTO createUser(EmployeeDTO employeeDTO) {
         if (userRepository.findByUsername(employeeDTO.getUsername()).isPresent()) {
             throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "USERNAME_ALREADY_EXIST", "Username Already Exist");
-        }else if (userRepository.findByMobile(employeeDTO.getMobile()).isPresent()) {
+        } else if (userRepository.findByMobile(employeeDTO.getMobile()).isPresent()) {
             throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "MOBILE_ALREADY_EXIST", "Mobile Already Exist");
         } else {
             String generatePassword = generatePassword();
@@ -49,7 +49,7 @@ public class AdminService {
         }
     }
 
-    public List<User> getAllUsers() {
+    public List<User> getUsers() {
         List<User> users = userRepository.findAllByUserRole(UserRole.USER);
         if (users.isEmpty()) {
             throw new ApplicationCustomException(HttpStatus.NOT_FOUND, "NO_USERS_FOUND", "No Users Found");
@@ -63,7 +63,7 @@ public class AdminService {
 
     public ApplicationResponseDTO changeUserStatus(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ApplicationCustomException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "User Not Found"));
-        user.setStatus(!user.getStatus());
+        user.setStatus(!user.isStatus());
         userRepository.save(user);
         return new ApplicationResponseDTO(HttpStatus.OK, "USER_STATUS_CHANGED_SUCCESSFULLY", "User Status Changes Successfully!");
     }
@@ -76,9 +76,10 @@ public class AdminService {
         return new ApplicationResponseDTO(HttpStatus.OK, "USER_DELETED_SUCCESSFULLY", "User Deleted Successfully!");
     }
 
-    public String generatePassword() {
+    private String generatePassword() {
         byte[] randomBytes = new byte[12];
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
     }
+
 }

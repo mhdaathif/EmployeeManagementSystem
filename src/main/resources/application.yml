@@ -10,10 +10,10 @@ spring:
       ddl-auto: update
     show-sql: true
   mail:
-    host: "smtp.gmail.email"
+    host: "smtp.gmail.com"
     port: 587
-    username: "ahbrand0714@gmail.com"
-    password: "******"
+    username: "aatzan30@gmail.com"
+    password: "yzbkwrcdvheylqyv"
     properties:
       mail:
         smtp:

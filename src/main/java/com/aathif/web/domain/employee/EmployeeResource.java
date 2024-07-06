@@ -1,6 +1,5 @@
-package com.aathif.web.domain.admin;
+package com.aathif.web.domain.employee;
 
-import com.aathif.web.domain.employee.EmployeeDTO;
 import com.aathif.web.domain.security.model.User;
 import com.aathif.web.dto.ApplicationResponseDTO;
 import jakarta.validation.Valid;
@@ -12,30 +11,33 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin")
-public class AdminResource {
-    private final AdminService adminService;
+@RequestMapping("/employee")
+public class EmployeeResource {
+    private final EmployeeService employeeService;
 
-    @PostMapping("/create-employee")
+    @PostMapping("/create")
     public ResponseEntity<ApplicationResponseDTO> createUser(@Valid @RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.ok(adminService.createUser(employeeDTO));
+        return ResponseEntity.ok(employeeService.createUser(employeeDTO));
     }
 
-    @GetMapping("/all-users")
+    @GetMapping("/get")
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
+        return ResponseEntity.ok(employeeService.getUsers());
     }
 
-    @GetMapping("/get-user/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(adminService.getUser(id));
+        return ResponseEntity.ok(employeeService.getUser(id));
     }
-    @PutMapping("/change-user-status/{id}")
+
+    @PutMapping("/change-status/{id}")
     public ResponseEntity<ApplicationResponseDTO> changeUserStatus(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(adminService.changeUserStatus(id));
+        return ResponseEntity.ok(employeeService.changeUserStatus(id));
     }
-    @DeleteMapping("/delete-user/{id}")
+
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApplicationResponseDTO> deleteUser(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(adminService.deleteUser(id));
+        return ResponseEntity.ok(employeeService.deleteUser(id));
     }
+
 }

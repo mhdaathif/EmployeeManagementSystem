@@ -40,39 +40,28 @@ public class AuthService {
             if (!passwordEncoder.matches(logInDTO.getPassword(), user.getPassword())) {
                 throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "INVALID_PASSWORD", "Invalid Password");
             }
-            if (user.getDelete()) {
-                throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DELETED", "Account Deleted");
-            }
-            if (!user.getStatus()) {
-                throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DISABLED", "Account Disabled");
-            }
+
+            checkAccountStatus(user);
+
             String accessToken = jwtTokenUtil.generateAccessToken(user);
             String refreshToken = jwtTokenUtil.generateRefreshToken(user);
             return new AuthResponseDTO(HttpStatus.OK, "LOGIN_SUCCESS", "Login Success", accessToken, refreshToken);
         }
     }
 
-    public static String getCurrentUser() {
-        try {
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            if (securityContext != null && securityContext.getAuthentication() != null) {
-                Object principal = securityContext.getAuthentication().getPrincipal();
-                if (principal instanceof UserData userData) {
-                    return userData.getUsername();
-                } else {
-                    throw new ApplicationCustomException(HttpStatus.UNAUTHORIZED, "INVALID_PRINCIPAL", "Invalid Principal");
-                }
-            } else {
-                throw new ApplicationCustomException(HttpStatus.UNAUTHORIZED, "SECURITY_CONTEXT_IS_NULL", "Security Context is Null");
-            }
-        } catch (Exception e) {
-            throw new ApplicationCustomException(HttpStatus.UNAUTHORIZED, "INVALID_USER", e.getMessage());
+    public void checkAccountStatus(User user){
+        if (user.isDelete()){
+            throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DELETE", "Account Delete");
+        }
+        if (!user.isStatus()){
+            throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DISABLED","Account Disable");
         }
     }
 
+
+
     public ApplicationResponseDTO resetPassword(ResetPasswordDTO resetPasswordDTO) {
-        String username = AuthService.getCurrentUser();
-        User user = userService.findByUsername(username);
+        User user = userService.getCurrentUser();
         if (!passwordEncoder.matches(resetPasswordDTO.getOldPassword(), user.getPassword())) {
             throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "INVALID_OLD_PASSWORD", "Invalid Old Password");
         } else if (!(resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmPassword()))) {
@@ -129,16 +118,16 @@ public class AuthService {
         return new ApplicationResponseDTO(HttpStatus.OK, "USER_NEW_PASSWORD_UPDATED_SUCCESSFULLY", "User New Password Update Successfully");
     }
 
-    public void checkAccountStatus(User user) {
-
-        if (user.getDelete()) {
-            throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DELETED", "Account Delete");
-        }
-
-        if (!user.getStatus()) {
-            throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DISABLE", "Account Disable");
-        }
-
-    }
+//    public void checkAccountStatus(User user) {
+//
+//        if (user.getDelete()) {
+//            throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DELETED", "Account Delete");
+//        }
+//
+//        if (!user.getStatus()) {
+//            throw new ApplicationCustomException(HttpStatus.BAD_REQUEST, "ACCOUNT_DISABLE", "Account Disable");
+//        }
+//
+//    }
 
 }

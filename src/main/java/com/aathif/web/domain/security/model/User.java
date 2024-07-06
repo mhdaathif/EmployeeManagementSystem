@@ -49,9 +49,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole = UserRole.USER;
     @Column(name = "status", nullable = false)
-    private Boolean status = true;
+    private boolean status = true;
     @Column(name = "delete", nullable = false)
-    private Boolean delete = false;
+    private boolean delete = false;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
     @Column(name = "job_role_id")

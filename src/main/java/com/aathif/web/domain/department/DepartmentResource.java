@@ -29,7 +29,7 @@ public class DepartmentResource {
         return ResponseEntity.ok(departmentService.getDepartment(id));
     }
 
-    @GetMapping("/get-by-name/{name}")
+    @GetMapping("/get/name/{name}")
     public ResponseEntity<Department> getDepartment(@PathVariable("name") String name) {
         return ResponseEntity.ok(departmentService.getDepartment(name));
     }

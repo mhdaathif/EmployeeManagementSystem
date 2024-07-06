@@ -4,12 +4,10 @@ import com.aathif.web.domain.security.dto.AuthResponseDTO;
 import com.aathif.web.domain.security.dto.LogInDTO;
 import com.aathif.web.domain.security.dto.ResetForgotPasswordDTO;
 import com.aathif.web.domain.security.service.AuthService;
+import com.aathif.web.domain.user.ResetPasswordDTO;
 import com.aathif.web.dto.ApplicationResponseDTO;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -47,4 +45,10 @@ public class AuthResource {
     public ResponseEntity<AuthResponseDTO> refreshAccessToken(@PathVariable("refresh-token") String refreshToken) {
         return ResponseEntity.ok(authService.generateRefreshToken(refreshToken));
     }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ApplicationResponseDTO> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
+        return ResponseEntity.ok(authService.resetPassword(resetPasswordDTO));
+    }
+
 }

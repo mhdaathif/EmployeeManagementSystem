@@ -58,6 +58,22 @@ public class Application {
                             .build()
             );
         }
+
+        if (userRepository.findByUsername("aathif.jiat@gmail.com").isEmpty()) {
+            userRepository.save(
+                    User.builder()
+                            .name("Aathif")
+                            .username("aathif.jiat@gmail.com")
+                            .mobile("0779782443")
+                            .password(passwordEncoder.encode("1234"))
+                            .status(true)
+                            .delete(false)
+                            .userRole(UserRole.USER)
+                            .jobRoleId(jobRole.getId())
+                            .build()
+            );
+        }
+
     }
 
 }
